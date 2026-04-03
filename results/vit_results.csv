@@ -1,0 +1,2 @@
+Model,Accuracy,Precision,Recall,F1,Computation_Time_Seconds
+ViT-S/16,0.65,0.6583333333333333,0.65,0.64,0.4779489040374756
