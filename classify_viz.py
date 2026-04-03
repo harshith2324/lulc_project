@@ -1,7 +1,5 @@
 import torch
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-import numpy as np
 from torch import nn
 from torch.utils.data import DataLoader
 from torchgeo.datasets import EuroSAT100
@@ -43,42 +41,45 @@ for epoch in range(15):
 
 model.eval()
 batch = next(iter(test_loader))
-images = batch['image'].float().to(device)
+images_tensor = batch['image'].float().to(device)
 labels = batch['label']
 
 with torch.no_grad():
-    outputs = model(images)
+    outputs = model(images_tensor)
     preds = torch.argmax(outputs, dim=1).cpu()
 
+# Use TorchGeo's built-in plot() method for each sample
+print("\nGenerating TorchGeo batch visualizations...")
 fig, axes = plt.subplots(2, 5, figsize=(18, 8))
-fig.suptitle('ResNet-50 Classification Results on EuroSAT', fontsize=15, fontweight='bold')
+fig.suptitle('ResNet-50 Classification Results (TorchGeo Visualization)', 
+             fontsize=14, fontweight='bold')
 
 for i, ax in enumerate(axes.flat):
-    # Extract and normalize RGB bands properly
-    img = images[i].cpu().numpy()
-    rgb = img[[3, 2, 1], :, :]
-    rgb = np.transpose(rgb, (1, 2, 0))
-    p2, p98 = np.percentile(rgb, 2), np.percentile(rgb, 98)
-    rgb = np.clip((rgb - p2) / (p98 - p2 + 1e-8), 0, 1)
-
+    sample = test_dataset[i]
+    # Use TorchGeo's built-in plot method
+    sample_fig = test_dataset.plot(sample)
+    sample_fig.canvas.draw()
+    
+    import numpy as np
+    buf = sample_fig.canvas.buffer_rgba()
+    img_array = np.asarray(buf)
+    plt.close(sample_fig)
+    
     correct = preds[i].item() == labels[i].item()
-    color = '#00cc00' if correct else '#cc0000'
+    color = 'green' if correct else 'red'
     label_text = '✓ CORRECT' if correct else '✗ WRONG'
-
-    ax.imshow(rgb)
-
-    # Thick colored border
-    rect = patches.Rectangle((0, 0), 63, 63, linewidth=6,
-                               edgecolor=color, facecolor='none')
-    ax.add_patch(rect)
-
+    
+    ax.imshow(img_array)
     ax.set_title(
         f'{label_text}\nTrue: {CLASS_NAMES[labels[i]]}\nPred: {CLASS_NAMES[preds[i]]}',
-        fontsize=8, fontweight='bold', color=color, pad=4
+        fontsize=8, fontweight='bold', color=color
     )
     ax.axis('off')
+    for spine in ax.spines.values():
+        spine.set_edgecolor(color)
+        spine.set_linewidth(6)
 
 plt.tight_layout()
 plt.savefig('./results/classification_viz.png', dpi=150, bbox_inches='tight')
-print("\nVisualization saved!")
+print("Visualization saved to results/classification_viz.png")
 plt.show()
