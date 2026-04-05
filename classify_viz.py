@@ -2,7 +2,7 @@ import torch
 import matplotlib.pyplot as plt
 from torch import nn
 from torch.utils.data import DataLoader
-from torchgeo.datasets import EuroSAT100
+from torchgeo.datasets import EuroSAT
 from torchgeo.models import resnet50, ResNet50_Weights
 
 CLASS_NAMES = [
@@ -13,7 +13,7 @@ CLASS_NAMES = [
 
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 
-test_dataset = EuroSAT100(root="./data", split="test", download=True)
+test_dataset = EuroSAT(root="./data", split="test", download=True)
 test_loader = DataLoader(test_dataset, batch_size=10, shuffle=True, num_workers=0)
 
 weights = ResNet50_Weights.SENTINEL2_ALL_MOCO
@@ -23,7 +23,7 @@ model = model.to(device)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
-train_dataset = EuroSAT100(root="./data", split="train", download=True)
+train_dataset = EuroSAT(root="./data", split="train", download=True)
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=0)
 
 print("Fine-tuning for visualization...")
