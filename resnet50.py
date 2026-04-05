@@ -7,25 +7,25 @@ from torchgeo.datasets import EuroSAT100
 from torchgeo.models import resnet50, ResNet50_Weights
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
-# Device setup
+#setup
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 print(f"Using device: {device}")
 
-# Dataset
+#Dataset
 print("Loading EuroSAT dataset...")
 train_dataset = EuroSAT100(root="./data", split="train", download=True)
 test_dataset = EuroSAT100(root="./data", split="test", download=True)
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=0)
 test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=0)
 
-# Model with pretrained Sentinel-2 weights
+#Model with Sentinel-2 weights
 print("Loading ResNet-50 with Sentinel-2 pretrained weights...")
 weights = ResNet50_Weights.SENTINEL2_ALL_MOCO
 model = resnet50(weights=weights)
 model.fc = nn.Linear(model.fc.in_features, 10)
 model = model.to(device)
 
-# Fine-tuning
+#Fine tuning the model
 print("Fine-tuning model on EuroSAT training data...")
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
@@ -47,7 +47,7 @@ for epoch in range(EPOCHS):
 
     print(f"Epoch {epoch+1}/{EPOCHS} - Loss: {running_loss/len(train_loader):.4f}")
 
-# Evaluation
+#Evaluating...
 print("\nRunning inference on test set...")
 model.eval()
 all_preds = []
@@ -69,7 +69,6 @@ with torch.no_grad():
 end_time = time.time()
 computation_time = end_time - start_time
 
-# Metrics
 accuracy = accuracy_score(all_labels, all_preds)
 precision = precision_score(all_labels, all_preds, average='weighted', zero_division=0)
 recall = recall_score(all_labels, all_preds, average='weighted', zero_division=0)
@@ -82,7 +81,7 @@ print(f"Recall: {recall:.4f}")
 print(f"F1 Score: {f1:.4f}")
 print(f"Computation Time (testing only): {computation_time:.2f} seconds")
 
-# Save to CSV
+#writing to CSV
 results = pd.DataFrame([{
     'Model': 'ResNet-50',
     'Accuracy': accuracy,
