@@ -18,8 +18,8 @@ This project compares three pretrained deep learning models for Land Use and Lan
 - Dataset: EuroSAT100 (via TorchGeo)
 - Source: Sentinel-2 satellite imagery
 - Classes: 10 LULC classes
-- Total Test Images: 1000 (100 per class)
-- Total Train Images: 600 (60 per class)
+- Total Test Images: 5400 (540 per class)
+- Total Train Images: 16200 (1620 per class)
 - Image Size: 64x64 pixels, 13 spectral bands
 
 ## Batch Size
@@ -34,9 +34,9 @@ This project compares three pretrained deep learning models for Land Use and Lan
 
 | Model     | Accuracy | Precision | Recall | F1 Score | Computation Time (s) |
 |-----------|----------|-----------|--------|----------|----------------------|
-| ResNet-50 | 0.90     | 0.9333    | 0.90   | 0.8933   | 0.09                 |
-| ViT-S/16  | 0.65     | 0.6583    | 0.65   | 0.64     | 0.48                 |
-| Swin-T    | 0.75     | 0.7333    | 0.75   | 0.7267   | 0.29                 |
+| ResNet-50 | 0.80     | 0.8667    | 0.80   | 0.80     | 0.18                 |
+| ViT-S/16  | 0.60     | 0.7083    | 0.60   | 0.6233   | 0.25                 |
+| Swin-T    | 0.90     | 0.9167    | 0.90   | 0.8967   | 0.42                 |
 
 ## File Structure
 - `resnet50.py` — ResNet-50 training and evaluation script
