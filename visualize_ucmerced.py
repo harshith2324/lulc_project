@@ -57,7 +57,7 @@ print("Computation time graph saved.")
 
 # Graph 3: EuroSAT vs UC Merced Accuracy Comparison
 fig, ax = plt.subplots(figsize=(10, 6))
-eurosat_acc = [0.90, 0.65, 0.75]  # ResNet, ViT, Swin
+eurosat_acc = [0.80, 0.60, 0.90]  # ResNet, ViT, Swin
 ucmerced_acc = accuracy
 
 x = np.arange(len(models))
