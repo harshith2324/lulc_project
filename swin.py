@@ -8,7 +8,7 @@ from torchgeo.models import swin_v2_t, Swin_V2_T_Weights
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import torch.nn.functional as F
 
-# Device setup
+#  setup
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 print(f"Using device: {device}")
 
@@ -31,7 +31,7 @@ model = swin_v2_t(weights=weights)
 model.head = nn.Linear(model.head.in_features, 10)
 model = model.to(device)
 
-# Fine-tuning
+# Fine tune
 print("Fine-tuning model on EuroSAT training data...")
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
@@ -59,7 +59,7 @@ for epoch in range(EPOCHS):
 
     print(f"Epoch {epoch+1}/{EPOCHS} - Loss: {running_loss/len(train_loader):.4f}")
 
-# Evaluation
+# Evaluating
 print("\nRunning inference on test set...")
 model.eval()
 all_preds = []
@@ -100,7 +100,7 @@ print(f"Recall: {recall:.4f}")
 print(f"F1 Score: {f1:.4f}")
 print(f"Computation Time (testing only): {computation_time:.2f} seconds")
 
-# Save to CSV
+# CSV
 results = pd.DataFrame([{
     'Model': 'Swin-T',
     'Accuracy': accuracy,
