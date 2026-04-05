@@ -3,7 +3,7 @@ import torch
 import pandas as pd
 from torch import nn
 from torch.utils.data import DataLoader
-from torchgeo.datasets import EuroSAT100
+from torchgeo.datasets import EuroSAT
 from torchgeo.models import swin_v2_t, Swin_V2_T_Weights
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import torch.nn.functional as F
@@ -19,8 +19,8 @@ BAND_INDICES = [3, 2, 1, 4, 5, 6, 7, 11, 12]
 
 # Dataset
 print("Loading EuroSAT dataset...")
-train_dataset = EuroSAT100(root="./data", split="train", download=True)
-test_dataset = EuroSAT100(root="./data", split="test", download=True)
+train_dataset = EuroSAT(root="./data", split="train", download=True)
+test_dataset = EuroSAT(root="./data", split="test", download=True)
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=0)
 test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=0)
 
