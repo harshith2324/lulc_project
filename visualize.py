@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Load all results
+#  results
 resnet = pd.read_csv('./results/resnet50_results.csv')
 vit = pd.read_csv('./results/vit_results.csv')
 swin = pd.read_csv('./results/swin_results.csv')
