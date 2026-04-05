@@ -24,7 +24,7 @@ test_dataset = EuroSAT100(root="./data", split="test", download=True)
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=0)
 test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=0)
 
-# Model with pretrained Sentinel-2 weights
+# Sentinel-2 weights
 print("Loading Swin-T with Sentinel-2 pretrained weights...")
 weights = Swin_V2_T_Weights.SENTINEL2_SI_MS_SATLAS
 model = swin_v2_t(weights=weights)
