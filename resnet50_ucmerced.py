@@ -8,7 +8,7 @@ from torchgeo.models import resnet50, ResNet50_Weights
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import torch.nn.functional as F
 
-# Device setup
+# setup
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 print(f"Using device: {device}")
 
@@ -19,14 +19,14 @@ test_dataset = UCMerced(root="./data", split="test", download=True)
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=0)
 test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=0)
 
-# Model with pretrained Sentinel-2 weights
+# Model with Sentinel-2 weights
 print("Loading ResNet-50 with Sentinel-2 pretrained weights...")
 weights = ResNet50_Weights.SENTINEL2_ALL_MOCO
 model = resnet50(weights=weights)
 model.fc = nn.Linear(model.fc.in_features, 21)  # UC Merced has 21 classes
 model = model.to(device)
 
-# Fine-tuning
+# Fine tuning model
 print("Fine-tuning model on UC Merced training data...")
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
@@ -39,7 +39,7 @@ for epoch in range(EPOCHS):
         images = batch['image'].float().to(device)
         labels = batch['label'].to(device)
 
-        # UC Merced is RGB (3 bands), ResNet expects 13 - repeat bands to match
+        # UC Merced is RGB 3 bands, ResNet needs 13 - repeat bands to match
         images = images.repeat(1, 5, 1, 1)[:, :13, :, :]
 
         # Resize to 64x64
@@ -54,7 +54,7 @@ for epoch in range(EPOCHS):
 
     print(f"Epoch {epoch+1}/{EPOCHS} - Loss: {running_loss/len(train_loader):.4f}")
 
-# Evaluation
+# Evaluating
 print("\nRunning inference on test set...")
 model.eval()
 all_preds = []
@@ -92,7 +92,7 @@ print(f"Recall: {recall:.4f}")
 print(f"F1 Score: {f1:.4f}")
 print(f"Computation Time (testing only): {computation_time:.2f} seconds")
 
-# Save to CSV
+#  CSV
 results = pd.DataFrame([{
     'Model': 'ResNet-50',
     'Dataset': 'UC Merced',
