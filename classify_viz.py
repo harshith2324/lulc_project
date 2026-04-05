@@ -48,7 +48,7 @@ with torch.no_grad():
     outputs = model(images_tensor)
     preds = torch.argmax(outputs, dim=1).cpu()
 
-# Use TorchGeo's built-in plot() method for each sample
+# Using torchGeo's built-in plot() method for each sample
 print("\nGenerating TorchGeo batch visualizations...")
 fig, axes = plt.subplots(2, 5, figsize=(18, 8))
 fig.suptitle('ResNet-50 Classification Results (TorchGeo Visualization)', 
